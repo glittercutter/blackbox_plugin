@@ -48,11 +48,8 @@ public:
 
 private:
 	Container* mParentContainer;
-
 	HWND mHwnd;
-
 	Rect mRect;
-	bool mNeedUpdate;
 };
 
 #endif

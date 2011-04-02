@@ -28,14 +28,12 @@ void Client::setRect(const Rect& rect)
 {
 	if (mRect == rect) return;
 	mRect = rect;
-	mNeedUpdate = true;
 }
 
 
 void Client::update()
 {
 	if (!mParentContainer->getParentColumn()->getParentWorkspace()->isCurrent()) return;
-	if (!mNeedUpdate) return;
 	int border = 
 		mParentContainer->getParentColumn()->getParentWorkspace()->isFullscreen() ==
 		true ? 0 : WINDOW_BORDER;
@@ -45,8 +43,6 @@ void Client::update()
 		mRect.X1 + border, mRect.Y1 + border, 
 		mRect.getWidth() - (border*2), mRect.getHeight() - (border*2), 
 		SWP_NOACTIVATE | SWP_NOOWNERZORDER | SWP_NOSENDCHANGING);
-
-	mNeedUpdate = false;
 }
 
 

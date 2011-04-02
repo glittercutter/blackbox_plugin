@@ -117,8 +117,7 @@ void TilingManager::resize(Direction dir)
 
 void TilingManager::toggleFullscreen()
 {
-	getFocusedClient()->getParentContainer()->getParentColumn()->
-		getParentWorkspace()->toggleFullscreen();
+	mCurrentWorkspace->toggleFullscreen();
 }
 
 
