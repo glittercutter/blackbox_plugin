@@ -1,0 +1,9 @@
+*.o
+*.obj
+*.d
+*.out
+*.swp
+*~
+*.dll
+*.exe
+*.a
