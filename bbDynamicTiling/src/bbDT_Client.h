@@ -27,7 +27,7 @@ class Client
 public:
 	// constructor
 	Client(HWND hwnd)
-	:	mHwnd(hwnd), mHeightFactor(1.0f) {}	
+	:	mHwnd(hwnd) {}	
 	
 	HWND getWindow() {return mHwnd;}
 	Container* getParentContainer() {return mParentContainer;}
@@ -35,8 +35,6 @@ public:
 
 	const Rect* getRect() {return &mRect;}
 	void setRect(const Rect& rect);
-
-	float getHeightFactor() {return mHeightFactor;}
 
 	int getElementNumber();
 

@@ -167,7 +167,7 @@ void Container::update()
 			if (*it == mClients.back())
 				height = rect.getHeight() - ((int)y - rect.Y1);
 			else
-				height = baseHeight * (*it)->getHeightFactor();
+				height = baseHeight;
 
 			(*it)->setRect(Rect(rect.X1, y, rect.X2, y + height));
 			y += height;
