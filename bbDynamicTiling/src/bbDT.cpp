@@ -24,14 +24,14 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 /* ---------------------------------- */
 /* plugin info */
 
-const char szAppName      [] = "bbDynamicTiling";
-const char szInfoVersion  [] = "0.1";
-const char szInfoAuthor   [] = "Sebastien Raymond";
-const char szInfoRelDate  [] = "2011-04-01";
-const char szInfoLink     [] = "http://glittercutter.github.com";
-const char szInfoEmail    [] = "";
-const char szVersion      [] = "bbDynamicTiling 0.1"; /* fallback for pluginInfo() */
-const char szCopyright    [] = "Sebastien Raymond 2011";
+const char szAppName[] =		"bbDynamicTiling";
+const char szInfoVersion[] =	"0.1";
+const char szInfoAuthor[] = 	"Sebastien Raymond";
+const char szInfoRelDate[] =	"2011-04-01";
+const char szInfoLink[] =		"http://glittercutter.github.com";
+const char szInfoEmail[] =		"";
+const char szVersion[] =		"bbDynamicTiling 0.1"; /* fallback for pluginInfo() */
+const char szCopyright[] =		"Sebastien Raymond 2011";
 
 /* ---------------------------------- */
 /* Dependencies on the plugin-name */
@@ -40,15 +40,15 @@ const char szCopyright    [] = "Sebastien Raymond 2011";
 #define BROAM_PREFIX "@bbDynamicTiling."
 
 #define BROAM_CONTAINER 		"container."
-#define BROAM_MOVE	 			"move."
-#define BROAM_FOCUS	 			"focus."
+#define BROAM_MOVE				"move."
+#define BROAM_FOCUS				"focus."
 #define BROAM_EXPAND			"expand."
 #define BROAM_RESIZE			"resize."
 
 #define BROAM_FULLSCREEN		"fullscreen"
 
-#define BROAM_UP 	"up"
-#define BROAM_RIGHT "right"
+#define BROAM_UP	"up"
+#define BROAM_RIGHT	"right"
 #define BROAM_DOWN	"down"
 #define BROAM_LEFT	"left"
 
@@ -68,11 +68,11 @@ const char szCopyright    [] = "Sebastien Raymond 2011";
 #ifdef __cplusplus
 extern "C" {
 #endif
-    DLL_EXPORT int beginPlugin(HINSTANCE hPluginInstance);
-    DLL_EXPORT int beginSlitPlugin(HINSTANCE hPluginInstance, HWND hSlit);
-    DLL_EXPORT int beginPluginEx(HINSTANCE hPluginInstance, HWND hSlit);
-    DLL_EXPORT void endPlugin(HINSTANCE hPluginInstance);
-    DLL_EXPORT LPCSTR pluginInfo(int field);
+	DLL_EXPORT int beginPlugin(HINSTANCE hPluginInstance);
+	DLL_EXPORT int beginSlitPlugin(HINSTANCE hPluginInstance, HWND hSlit);
+	DLL_EXPORT int beginPluginEx(HINSTANCE hPluginInstance, HWND hSlit);
+	DLL_EXPORT void endPlugin(HINSTANCE hPluginInstance);
+	DLL_EXPORT LPCSTR pluginInfo(int field);
 #ifdef __cplusplus
 }
 #endif
@@ -105,9 +105,9 @@ Direction getDirection(const char* str);
 
 enum eval_broam_modes
 {
-    M_BOL = 1,
-    M_INT = 2,
-    M_STR = 3
+	M_BOL = 1,
+	M_INT = 2,
+	M_STR = 3
 };
 	
 /* ------------------------------------------------------------------ */
@@ -116,37 +116,37 @@ enum eval_broam_modes
 /* slit interface */
 int beginPluginEx(HINSTANCE hPluginInstance, HWND hSlit)
 {
-    WNDCLASS wc;
+	WNDCLASS wc;
 
-    /* --------------------------------------------------- */
-    /* This plugin can run in one instance only. If BBhwnd
-       is set it means we are already loaded. */
+	/* --------------------------------------------------- */
+	/* This plugin can run in one instance only. If BBhwnd
+	   is set it means we are already loaded. */
 
-    if (BBhwnd)
-    {
-        MessageBox(BBhwnd, "Do not load me twice!", szVersion,
-                MB_OK | MB_ICONERROR | MB_TOPMOST);
-        return 1; /* 1 = failure */
-    }
+	if (BBhwnd)
+	{
+		MessageBox(BBhwnd, "Do not load me twice!", szVersion,
+					MB_OK | MB_ICONERROR | MB_TOPMOST);
+		return 1; /* 1 = failure */
+	}
 
-    /* --------------------------------------------------- */
-    /* grab some global information */
+	/* --------------------------------------------------- */
+	/* grab some global information */
 
-    BBhwnd = GetBBWnd();
-    g_hInstance = hPluginInstance;
+	BBhwnd = GetBBWnd();
+	g_hInstance = hPluginInstance;
 
-    if (0 == memcmp(GetBBVersion(), "bbLean", 6))
-        under_bblean = true;
-    else if (0 == memcmp(GetBBVersion(), "bb", 2))
-        under_xoblite = true;
+	if (0 == memcmp(GetBBVersion(), "bbLean", 6))
+		under_bblean = true;
+	else if (0 == memcmp(GetBBVersion(), "bb", 2))
+		under_xoblite = true;
 
-    /* --------------------------------------------------- */
-    /* register the window class */
+	/* --------------------------------------------------- */
+	/* register the window class */
 
-    memset(&wc, 0, sizeof wc);
-    wc.lpfnWndProc  = WndProc;      /* window procedure */
-    wc.hInstance    = g_hInstance;  /* hInstance of .dll */
-    wc.lpszClassName = szAppName;    /* window class name */
+	memset(&wc, 0, sizeof wc);
+	wc.lpfnWndProc = WndProc;		/* window procedure */
+	wc.hInstance = g_hInstance;		/* hInstance of .dll */
+	wc.lpszClassName = szAppName;	/* window class name */
 	wc.style = 0;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
@@ -155,54 +155,54 @@ int beginPluginEx(HINSTANCE hPluginInstance, HWND hSlit)
 	wc.hbrBackground = NULL;
 	wc.lpszMenuName = NULL;
 
-    if (!RegisterClass(&wc))
-    {
-        MessageBox(BBhwnd,
-            "Error registering window class", szVersion,
-                MB_OK | MB_ICONERROR | MB_TOPMOST);
-        return 1; /* 1 = failure */
-    }
+	if (!RegisterClass(&wc))
+	{
+		MessageBox(BBhwnd,
+			"Error registering window class", szVersion,
+			MB_OK | MB_ICONERROR | MB_TOPMOST);
+		return 1; /* 1 = failure */
+	}
 
-    ReadRCSettings();
+	ReadRCSettings();
 
-    /* --------------------------------------------------- */
-    /* create the window */
+	/* --------------------------------------------------- */
+	/* create the window */
 
-    g_hwnd = CreateWindowEx(
-        0,   				/* window ex-style */
-        szAppName,          /* window class name */
-        NULL,               /* window caption text */
-        0, 					/* window style */
-        0,                  /* x position */
-        0,                  /* y position */
-        0,                  /* window width */
-        0,                  /* window height */
-        HWND_MESSAGE,       /* parent window */
-        NULL,               /* window menu */
-        g_hInstance,        /* hInstance of .dll */
-        NULL                /* creation data */
-        );
+	g_hwnd = CreateWindowEx(
+		0,					/* window ex-style */
+		szAppName,			/* window class name */
+		NULL,				/* window caption text */
+		0, 					/* window style */
+		0,					/* x position */
+		0,					/* y position */
+		0,					/* window width */
+		0,					/* window height */
+		HWND_MESSAGE,		/* parent window */
+		NULL,				/* window menu */
+		g_hInstance,		/* hInstance of .dll */
+		NULL				/* creation data */
+	);
 
-	tilingManager = new TilingManager;
-    
+	tilingManager = new TilingManager; 
+
 	return 0; /* 0 = success */
 }
 
 /* no-slit interface */
 int beginPlugin(HINSTANCE hPluginInstance)
 {
-    return beginPluginEx(hPluginInstance, NULL);
+	return beginPluginEx(hPluginInstance, NULL);
 }
 
 /* ------------------------------------------------------------------ */
 /* on unload... */
 void endPlugin(HINSTANCE hPluginInstance)
 {
-    /* Destroy the window... */
-    DestroyWindow(g_hwnd);
+	/* Destroy the window... */
+	DestroyWindow(g_hwnd);
 
-    /* Unregister window class... */
-    UnregisterClass(szAppName, hPluginInstance);
+	/* Unregister window class... */
+	UnregisterClass(szAppName, hPluginInstance);
 
 	delete tilingManager;
 }
@@ -212,42 +212,42 @@ void endPlugin(HINSTANCE hPluginInstance)
    about a particular plugin. */
 LPCSTR pluginInfo(int index)
 {
-    switch (index)
-    {
-        case PLUGIN_NAME:       return szAppName;       /* Plugin name */
-        case PLUGIN_VERSION:    return szInfoVersion;   /* Plugin version */
-        case PLUGIN_AUTHOR:     return szInfoAuthor;    /* Author */
-        case PLUGIN_RELEASE:    return szInfoRelDate;   /* Release date, preferably in yyyy-mm-dd format */
-        case PLUGIN_LINK:       return szInfoLink;      /* Link to author's website */
-        case PLUGIN_EMAIL:      return szInfoEmail;     /* Author's email */
-        default:                return szVersion;       /* Fallback: Plugin name + version, e.g. "MyPlugin 1.0" */
-    }
+	switch (index)
+	{
+		case PLUGIN_NAME:		return szAppName;		/* Plugin name */
+		case PLUGIN_VERSION:	return szInfoVersion;	/* Plugin version */
+		case PLUGIN_AUTHOR:		return szInfoAuthor;	/* Author */
+		case PLUGIN_RELEASE:	return szInfoRelDate;	/* Release date, preferably in yyyy-mm-dd format */
+		case PLUGIN_LINK:		return szInfoLink;		/* Link to author's website */
+		case PLUGIN_EMAIL:		return szInfoEmail;		/* Author's email */
+		default:				return szVersion;		/* Fallback: Plugin name + version, e.g. "MyPlugin 1.0" */
+	}
 }
 
 /* ------------------------------------------------------------------ */
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    static int msgs[] = { BB_RECONFIGURE, BB_TASKSUPDATE, BB_BROADCAST, BB_DESKTOPINFO, 0};
+	static int msgs[] = { BB_RECONFIGURE, BB_TASKSUPDATE, BB_BROADCAST, BB_DESKTOPINFO, 0};
 
-    switch (message)
-    {
-        case WM_CREATE:
-            /* Register to reveive these message */
-            SendMessage(BBhwnd, BB_REGISTERMESSAGE, (WPARAM)hwnd, (LPARAM)msgs);
-            break;
+	switch (message)
+	{
+		case WM_CREATE:
+			/* Register to reveive these message */
+			SendMessage(BBhwnd, BB_REGISTERMESSAGE, (WPARAM)hwnd, (LPARAM)msgs);
+			break;
 
-        case WM_DESTROY:
-            SendMessage(BBhwnd, BB_UNREGISTERMESSAGE, (WPARAM)hwnd, (LPARAM)msgs);
-            break;
+		case WM_DESTROY:
+			SendMessage(BBhwnd, BB_UNREGISTERMESSAGE, (WPARAM)hwnd, (LPARAM)msgs);
+			break;
 
-        /* ---------------------------------------------------------- */
-        /* Blackbox sends a "BB_RECONFIGURE" message on style changes etc. */
+		/* ---------------------------------------------------------- */
+		/* Blackbox sends a "BB_RECONFIGURE" message on style changes etc. */
 
-        case BB_RECONFIGURE:
-            ReadRCSettings();
+		case BB_RECONFIGURE:
+			ReadRCSettings();
 			tilingManager->reset();
-            break;
+			break;
 
 		case BB_TASKSUPDATE:
 			switch (lParam)
@@ -272,16 +272,16 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 			break;
 
-        /* ---------------------------------------------------------- */
-        /* Blackbox sends Broams to all windows... */
+		/* ---------------------------------------------------------- */
+		/* Blackbox sends Broams to all windows... */
 
-        case BB_BROADCAST:
-        {
-            const char *msg = (LPCSTR)lParam;
+		case BB_BROADCAST:
+		{
+			const char *msg = (LPCSTR)lParam;
 
-            /* if the broam is not for us, return now */
-            if (0 != memcmp(msg, BROAM_PREFIX, sizeof BROAM_PREFIX - 1))
-                break;
+			/* if the broam is not for us, return now */
+			if (0 != memcmp(msg, BROAM_PREFIX, sizeof BROAM_PREFIX - 1))
+				break;
 			msg += sizeof BROAM_PREFIX - 1;
 			
 			// move
@@ -311,7 +311,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 
 			// expand
-            else if (0 == strncmp(msg, BROAM_EXPAND, sizeof BROAM_EXPAND - 1))
+			else if (0 == strncmp(msg, BROAM_EXPAND, sizeof BROAM_EXPAND - 1))
 			{
 				msg += sizeof BROAM_EXPAND - 1;
 				tilingManager->expand(getDirection(msg));
@@ -325,28 +325,28 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 
 			// fullscreen
-            else if (0 == strncmp(msg, BROAM_FULLSCREEN, sizeof BROAM_FULLSCREEN - 1))
+			else if (0 == strncmp(msg, BROAM_FULLSCREEN, sizeof BROAM_FULLSCREEN - 1))
 			{
 				tilingManager->toggleFullscreen();
 			}
 
-            break;
-        }
+				break;
+		}
 		
 		case BB_DESKTOPINFO:
 			tilingManager->updateDesktopInfo();
 			break;
 
-        /* ---------------------------------------------------------- */
-        /* prevent the user from closing the plugin with alt-F4 */
+		/* ---------------------------------------------------------- */
+		/* prevent the user from closing the plugin with alt-F4 */
 
-        case WM_CLOSE:
-            break;
+		case WM_CLOSE:
+				break;
 
 		default:
 			return DefWindowProc(hwnd, message, wParam, lParam); /* We aren't handling this message so return DefWindowProc */
-    }
-    return 0;
+	}
+	return 0;
 }
 
 
@@ -369,38 +369,38 @@ Direction getDirection(const char* str)
 
 void ReadRCSettings(void)
 {
-//     /* Locate configuration file */
-//     FindRCFile(rcpath, RC_FILE, g_hInstance);
+//	/* Locate configuration file */
+//	FindRCFile(rcpath, RC_FILE, g_hInstance);
 // 
-//     /* Read our settings. (If the config file does not exist,
-//        the Read... functions give us just the defaults.) */
+//	/* Read our settings. (If the config file does not exist,
+//		the Read... functions give us just the defaults.) */
 // 
-//     my.xpos   = ReadInt(rcpath, RC_KEY("xpos"), 10);
-//     my.ypos   = ReadInt(rcpath, RC_KEY("ypos"), 10);
-//     my.width  = ReadInt(rcpath, RC_KEY("width"), 80);
-//     my.height = ReadInt(rcpath, RC_KEY("height"), 40);
+//	my.xpos	= ReadInt(rcpath, RC_KEY("xpos"), 10);
+//	my.ypos	= ReadInt(rcpath, RC_KEY("ypos"), 10);
+//	my.width  = ReadInt(rcpath, RC_KEY("width"), 80);
+//	my.height = ReadInt(rcpath, RC_KEY("height"), 40);
 // 
-//     my.alphaEnabled   = ReadBool(rcpath, RC_KEY("alphaEnabled"), false);
-//     my.alphaValue     = ReadInt(rcpath,  RC_KEY("alphaValue"), 192);
-//     my.alwaysOnTop    = ReadBool(rcpath, RC_KEY("alwaysOntop"), true);
-//     my.drawBorder     = ReadBool(rcpath, RC_KEY("drawBorder"), true);
-//     my.snapWindow     = ReadBool(rcpath, RC_KEY("snapWindow"), true);
-//     my.pluginToggle   = ReadBool(rcpath, RC_KEY("pluginToggle"), true);
-//     my.useSlit        = ReadBool(rcpath, RC_KEY("useSlit"), true);
+//	my.alphaEnabled	= ReadBool(rcpath, RC_KEY("alphaEnabled"), false);
+//	my.alphaValue	= ReadInt(rcpath,  RC_KEY("alphaValue"), 192);
+//	my.alwaysOnTop	= ReadBool(rcpath, RC_KEY("alwaysOntop"), true);
+//	my.drawBorder	= ReadBool(rcpath, RC_KEY("drawBorder"), true);
+//	my.snapWindow	= ReadBool(rcpath, RC_KEY("snapWindow"), true);
+//	my.pluginToggle	= ReadBool(rcpath, RC_KEY("pluginToggle"), true);
+//	my.useSlit		= ReadBool(rcpath, RC_KEY("useSlit"), true);
 // 
-//     strcpy(my.windowText, ReadString(rcpath, RC_KEY("windowText"), szVersion));
+//	strcpy(my.windowText, ReadString(rcpath, RC_KEY("windowText"), szVersion));
 }
 
 /* ------------------------------------------------------------------ */
 char* find_config_file(char *rcpath, const char *file)
 {
-    bool (*pFindRCFile)(LPSTR rcpath, LPCSTR rcfile, HINSTANCE plugin_instance);
-    *(FARPROC*)&pFindRCFile = GetProcAddress(GetModuleHandle(NULL), "FindRCFile");
-    if (pFindRCFile)
-        pFindRCFile(rcpath, file, g_hInstance);
-    else
-        set_my_path(g_hInstance, rcpath, file);
-    return rcpath;
+	bool (*pFindRCFile)(LPSTR rcpath, LPCSTR rcfile, HINSTANCE plugin_instance);
+	*(FARPROC*)&pFindRCFile = GetProcAddress(GetModuleHandle(NULL), "FindRCFile");
+	if (pFindRCFile)
+		pFindRCFile(rcpath, file, g_hInstance);
+	else
+		set_my_path(g_hInstance, rcpath, file);
+	return rcpath;
 }
 
 
