@@ -1,5 +1,8 @@
+bbDynamicTiling
+A manual tiling window manager for Blackbox for Windows, inspired by the 'i3' window manager for X11
+
 # ================
-# Add to bbKeys.rc
+# Append below lines to bbKeys.rc
 # ================
 
 # bbDynamicTiling
@@ -41,3 +44,6 @@ KeyToGrab(L), WithModifier(Win+Alt), WithAction(exec @bbDynamicTiling.resize.rig
 
 # toggle fullscreen
 KeyToGrab(F), WithModifier(Win), WithAction(exec @bbDynamicTiling.fullscreen)
+
+# toggle floating
+KeyToGrab(F), WithModifier(Win+Shift), WithAction(exec @bbDynamicTiling.floating)
