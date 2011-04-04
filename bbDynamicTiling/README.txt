@@ -1,9 +1,8 @@
 bbDynamicTiling
 A manual tiling window manager for Blackbox for Windows, inspired by the 'i3' window manager for X11
 
-# ================
-# Append below lines to bbKeys.rc
-# ================
+# Append lines below to bbKeys.rc
+# =====================================================================================
 
 # bbDynamicTiling
 
@@ -14,7 +13,7 @@ KeyToGrab(T), WithModifier(Ctrl+Alt), WithAction(exec @BBCfg.plugin.load bbDynam
 KeyToGrab(H), WithModifier(Win), WithAction(exec @bbDynamicTiling.focus.left)
 KeyToGrab(J), WithModifier(Win), WithAction(exec @bbDynamicTiling.focus.down)
 KeyToGrab(K), WithModifier(Win), WithAction(exec @bbDynamicTiling.focus.up)
-KeyToGrab(L), WithModifier(Win), WithAction(exec @bbDynamicTiling.focus.right)
+KeyToGrab(L), WithModifier(Win), WithAction(exec @bbDynamicTiling.focus.right) ## See note ##
 KeyToGrab(H), WithModifier(Alt), WithAction(exec @bbDynamicTiling.focus.container.left)
 KeyToGrab(J), WithModifier(Alt), WithAction(exec @bbDynamicTiling.focus.container.down)
 KeyToGrab(K), WithModifier(Alt), WithAction(exec @bbDynamicTiling.focus.container.up)
@@ -47,3 +46,7 @@ KeyToGrab(F), WithModifier(Win), WithAction(exec @bbDynamicTiling.fullscreen)
 
 # toggle floating
 KeyToGrab(F), WithModifier(Win+Shift), WithAction(exec @bbDynamicTiling.floating)
+
+# =====================================================================================
+# Note: if using the 'Win+L' key combination for the 'focus.right' command,
+# 'bbDynamicTiling.enableLowLevelKeyHook' must be set to true in the file 'bbDynamicTiling.rc'

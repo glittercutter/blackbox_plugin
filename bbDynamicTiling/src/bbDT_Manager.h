@@ -25,8 +25,8 @@ class TilingManager
 {
 public:
 	// constructor
-	TilingManager()
-	:	mCurrentWorkspace(0)
+	TilingManager(RcSetting* _rcSetting)
+	:	mCurrentWorkspace(0), rcSetting(_rcSetting)
 	{
 		init();
 	}
@@ -75,6 +75,8 @@ private:
 
 	std::unordered_map<HWND, Client*> mClients;
 	std::unordered_set<std::string> mInclusionList;
+
+	RcSetting* rcSetting;
 };
 
 #endif

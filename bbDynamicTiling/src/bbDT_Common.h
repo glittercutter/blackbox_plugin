@@ -109,4 +109,11 @@ struct Rect
 	int X1, Y1, X2, Y2;
 };
 
+struct RcSetting
+{
+	bool enableLowLevelKeyHook;
+	int containerBorderSize;
+	int clientBorderSize;
+};
+
 #endif

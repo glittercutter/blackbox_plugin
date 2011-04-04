@@ -82,6 +82,8 @@ extern "C" {
 /* Global variables */
 
 HINSTANCE g_hInstance;
+HHOOK g_lowLevelHook;
+RcSetting g_rcSetting;
 HWND BBhwnd;
 bool under_bblean;
 bool under_xoblite;
@@ -100,6 +102,7 @@ TilingManager* tilingManager;
 void ReadRCSettings(void);
 void WriteRCSettings(void);
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK LowLevelKeyboardProc(int code, WPARAM wparam, LPARAM lparam);
 int scan_broam(struct msg_test *msg_test, const char *test);
 void eval_broam(struct msg_test *msg_test, int mode, void *pValue);
 Direction getDirection(const char* str);
@@ -167,6 +170,17 @@ int beginPluginEx(HINSTANCE hPluginInstance, HWND hSlit)
 	ReadRCSettings();
 
 	/* --------------------------------------------------- */
+	/* register low level hook */
+	if (g_rcSetting.enableLowLevelKeyHook)
+	{
+		g_lowLevelHook = SetWindowsHookEx(
+			WH_KEYBOARD_LL,
+			LowLevelKeyboardProc,	/* hook procedure */
+			g_hInstance,			/* hInstance of .dll */
+			0);
+	}
+
+	/* --------------------------------------------------- */
 	/* create the window */
 
 	g_hwnd = CreateWindowEx(
@@ -184,7 +198,7 @@ int beginPluginEx(HINSTANCE hPluginInstance, HWND hSlit)
 		NULL				/* creation data */
 	);
 
-	tilingManager = new TilingManager; 
+	tilingManager = new TilingManager(&g_rcSetting);
 
 	return 0; /* 0 = success */
 }
@@ -204,6 +218,10 @@ void endPlugin(HINSTANCE hPluginInstance)
 
 	/* Unregister window class... */
 	UnregisterClass(szAppName, hPluginInstance);
+	
+	/* Unhook low level keyboard hook... */
+	if (g_rcSetting.enableLowLevelKeyHook)
+		UnhookWindowsHookEx(g_lowLevelHook);
 
 	delete tilingManager;
 }
@@ -357,6 +375,29 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 
+/* ------------------------------------------------------------------ */
+/* catch Win+L key combination */
+
+LRESULT CALLBACK LowLevelKeyboardProc(int code, WPARAM wparam, LPARAM lparam) {
+    KBDLLHOOKSTRUCT& kllhs = *(KBDLLHOOKSTRUCT*)lparam;
+    if (code == HC_ACTION) {
+        // Test for an 'L' keypress with either Win key down.
+        if (wparam == WM_KEYDOWN && kllhs.vkCode == 'L' && 
+            (GetAsyncKeyState(VK_LWIN) < 0 || GetAsyncKeyState(VK_RWIN) < 0))
+        {
+			tilingManager->focus(D_RIGHT, T_CLIENT);
+
+            // Return non-zero to halt message propagation
+            // and prevent the Win+L hotkey from getting activated. (LOCKING)
+            return 1;
+        }
+    }
+    return CallNextHookEx(0, code, wparam, lparam);
+}
+
+
+/* ------------------------------------------------------------------ */
+
 Direction getDirection(const char* str)
 {
 	Direction dir = D_INVALID;
@@ -376,26 +417,15 @@ Direction getDirection(const char* str)
 
 void ReadRCSettings(void)
 {
-//	/* Locate configuration file */
-//	FindRCFile(rcpath, RC_FILE, g_hInstance);
-// 
-//	/* Read our settings. (If the config file does not exist,
-//		the Read... functions give us just the defaults.) */
-// 
-//	my.xpos	= ReadInt(rcpath, RC_KEY("xpos"), 10);
-//	my.ypos	= ReadInt(rcpath, RC_KEY("ypos"), 10);
-//	my.width  = ReadInt(rcpath, RC_KEY("width"), 80);
-//	my.height = ReadInt(rcpath, RC_KEY("height"), 40);
-// 
-//	my.alphaEnabled	= ReadBool(rcpath, RC_KEY("alphaEnabled"), false);
-//	my.alphaValue	= ReadInt(rcpath,  RC_KEY("alphaValue"), 192);
-//	my.alwaysOnTop	= ReadBool(rcpath, RC_KEY("alwaysOntop"), true);
-//	my.drawBorder	= ReadBool(rcpath, RC_KEY("drawBorder"), true);
-//	my.snapWindow	= ReadBool(rcpath, RC_KEY("snapWindow"), true);
-//	my.pluginToggle	= ReadBool(rcpath, RC_KEY("pluginToggle"), true);
-//	my.useSlit		= ReadBool(rcpath, RC_KEY("useSlit"), true);
-// 
-//	strcpy(my.windowText, ReadString(rcpath, RC_KEY("windowText"), szVersion));
+	/* Locate configuration file */
+	FindRCFile(rcpath, RC_FILE, g_hInstance);
+
+	/* Read our settings. (If the config file does not exist,
+	the Read... functions give us just the defaults.) */
+
+	g_rcSetting.enableLowLevelKeyHook	= ReadBool(rcpath, RC_KEY("enableLowLevelKeyHook"), true);
+	g_rcSetting.containerBorderSize		= ReadInt(rcpath, RC_KEY("containerBorderSize"), 0);	
+	g_rcSetting.clientBorderSize		= ReadInt(rcpath, RC_KEY("clientBorderSize"), 1);
 }
 
 /* ------------------------------------------------------------------ */
