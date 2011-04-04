@@ -117,13 +117,24 @@ void TilingManager::resize(Direction dir)
 
 void TilingManager::toggleFullscreen()
 {
-	mCurrentWorkspace->toggleFullscreen();
+	if (mCurrentWorkspace)
+		mCurrentWorkspace->toggleFullscreen();
 }
 
 
-void TilingManager::addWindow(HWND hwnd)
+void TilingManager::toggleFloating()
 {
-	if (!checkInclusionList(hwnd)) return;
+	HWND hwnd = GetTask(GetActiveTask());
+	if (getClient(hwnd))
+		removeWindow(hwnd);
+	else
+		addWindow(hwnd, true);
+}
+
+
+void TilingManager::addWindow(HWND hwnd, bool ignoreList/* = false*/)
+{
+	if (!ignoreList) if (!checkInclusionList(hwnd)) return;
 	
 	// check if we have this window already
 	if (mClients.find(hwnd) != mClients.end()) return;

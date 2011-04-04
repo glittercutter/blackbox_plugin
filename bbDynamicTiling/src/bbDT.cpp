@@ -46,6 +46,7 @@ const char szCopyright[] =		"Sebastien Raymond 2011";
 #define BROAM_RESIZE			"resize."
 
 #define BROAM_FULLSCREEN		"fullscreen"
+#define BROAM_FLOAT				"float"
 
 #define BROAM_UP	"up"
 #define BROAM_RIGHT	"right"
@@ -324,13 +325,19 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 				tilingManager->resize(getDirection(msg));
 			}
 
-			// fullscreen
+			// toggle fullscreen
 			else if (0 == strncmp(msg, BROAM_FULLSCREEN, sizeof BROAM_FULLSCREEN - 1))
 			{
 				tilingManager->toggleFullscreen();
 			}
-
-				break;
+			
+			// toggle floating
+			else if (0 == strncmp(msg, BROAM_FLOAT, sizeof BROAM_FLOAT - 1))
+			{
+				tilingManager->toggleFloating();
+			}
+			
+			break;
 		}
 		
 		case BB_DESKTOPINFO:

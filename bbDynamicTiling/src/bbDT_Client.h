@@ -27,7 +27,23 @@ class Client
 public:
 	// constructor
 	Client(HWND hwnd)
-	:	mHwnd(hwnd) {}	
+	:	mHwnd(hwnd)
+	{
+		// get floating rect
+		RECT rect;
+		if (GetWindowRect(hwnd, &rect))
+			mFloatingRect = &rect;
+	}
+	// destructor
+	~Client()
+	{
+		// restore floating rect
+		SetWindowPos(
+			mHwnd, NULL,
+			mFloatingRect.X1, mFloatingRect.Y1, 
+			mFloatingRect.getWidth(), mFloatingRect.getHeight(), 
+			SWP_NOACTIVATE | SWP_NOOWNERZORDER | SWP_NOSENDCHANGING);
+	}
 	
 	HWND getWindow() {return mHwnd;}
 	Container* getParentContainer() {return mParentContainer;}
@@ -50,6 +66,7 @@ private:
 	Container* mParentContainer;
 	HWND mHwnd;
 	Rect mRect;
+	Rect mFloatingRect;
 };
 
 #endif

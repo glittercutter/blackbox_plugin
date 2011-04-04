@@ -43,8 +43,9 @@ public:
 	void expand(Direction dir);
 	void resize(Direction dir);
 	void toggleFullscreen();
+	void toggleFloating();
 
-	void addWindow(HWND hwnd);
+	void addWindow(HWND hwnd, bool ignoreList = false);
 	void removeWindow(HWND hwnd);
 	void moveClient(Client* client, Direction dir = D_INVALID);
 	void moveContainer(Container* container, Direction dir = D_INVALID);
