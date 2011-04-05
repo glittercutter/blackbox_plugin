@@ -378,23 +378,25 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 /* ------------------------------------------------------------------ */
 /* catch Win+L key combination */
 
-LRESULT CALLBACK LowLevelKeyboardProc(int code, WPARAM wparam, LPARAM lparam) {
-    KBDLLHOOKSTRUCT& kllhs = *(KBDLLHOOKSTRUCT*)lparam;
-    if (code == HC_ACTION) {
-        // Test for an 'L' keypress with either Win key down and no other modifier
-        if (wparam == WM_KEYDOWN && kllhs.vkCode == 'L' && 
-            (GetAsyncKeyState(VK_LWIN) < 0 || GetAsyncKeyState(VK_RWIN) < 0) &&
+LRESULT CALLBACK LowLevelKeyboardProc(int code, WPARAM wparam, LPARAM lparam)
+{
+	KBDLLHOOKSTRUCT& kllhs = *(KBDLLHOOKSTRUCT*)lparam;
+	if (code == HC_ACTION)
+	{
+		// Test for an 'L' keypress with either Win key down and no other modifier
+		if (wparam == WM_KEYDOWN && kllhs.vkCode == 'L' && 
+			(GetAsyncKeyState(VK_LWIN) < 0 || GetAsyncKeyState(VK_RWIN) < 0) &&
 			GetAsyncKeyState(VK_SHIFT) >= 0 && GetAsyncKeyState(VK_CONTROL) >= 0 &&
 			GetAsyncKeyState(VK_MENU) >= 0)
-        {
+		{
 			tilingManager->focus(D_RIGHT, T_CLIENT);
 
-            // Return non-zero to halt message propagation
-            // and prevent the Win+L hotkey from getting activated. (LOCKING)
-            return 1;
-        }
-    }
-    return CallNextHookEx(0, code, wparam, lparam);
+			// Return non-zero to halt message propagation
+			// and prevent the Win+L hotkey from getting activated. (LOCKING)
+			return 1;
+		}
+	}
+	return CallNextHookEx(0, code, wparam, lparam);
 }
 
 
