@@ -1,0 +1,8 @@
+# Win+L workaround
+bbDynamicTiling.enableLowLevelKeyHook: true
+
+bbDynamicTiling.workspaceFullscreenBorderSize: 0
+bbDynamicTiling.workspaceBorderSize: 0
+bbDynamicTiling.columnBorderSize: 1
+bbDynamicTiling.containerBorderSize: 1
+bbDynamicTiling.clientBorderSize: 1
