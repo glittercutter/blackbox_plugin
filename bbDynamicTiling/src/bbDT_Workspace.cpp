@@ -17,6 +17,7 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 */
 
 #include "bbDT_Workspace.h"
+#include "bbDT_Manager.h"
 
 
 void Workspace::addClient(Client* client)
@@ -306,7 +307,15 @@ void Workspace::update()
 	GetMonitorRect(hwnd, &rect, GETMON_FROM_WINDOW | GETMON_WORKAREA);
 	mRect = &rect;
 	mRows = mColumns.back()->getContainerCount();
-	
+
+	int workspaceBorder = isFullscreen() == true ? 
+		mManager->getWorkspaceFullscreenBorderSize() : 
+		mManager->getWorkspaceBorderSize();
+	int colBorder = isFullscreen() == true ? 0 : mManager->getColumnBorderSize();
+
+	mRect.X1 += workspaceBorder; mRect.X2 -= workspaceBorder;
+	mRect.Y1 += workspaceBorder; mRect.Y2 -= workspaceBorder;
+
 	float sumWidthSizeRatio = 0.f;
 	for (auto it = mColumns.begin(); it != mColumns.end(); it++)
 		sumWidthSizeRatio += (*it)->getWidthRatio();
@@ -314,6 +323,7 @@ void Workspace::update()
 	float baseWidth = mRect.getWidth() / sumWidthSizeRatio;
 	float x = mRect.X1;
 	float width;
+
 
 	for (auto it = mColumns.begin(); it != mColumns.end(); it++)
 	{
@@ -323,13 +333,14 @@ void Workspace::update()
 			width = (*it)->getWidthRatio() * baseWidth;
 
 		(*it)->setPosX(x);
-		(*it)->setWidth(width);
+		(*it)->setWidth(width - ((*it)->isLast() ? 0 : colBorder));
 		x += width;
 	}
 
 	for (auto it = mColumns.begin(); it != mColumns.end(); it++)
 		(*it)->update();
 }
+
 
 int Workspace::getColumnNumber(Column* column)
 {

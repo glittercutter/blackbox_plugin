@@ -26,8 +26,8 @@ class Workspace
 {
 public:
 	// constructor
-	Workspace(unsigned int number)
-	:	mWorkspaceNumber(number), mRows(1), mFullscreen(false), mIsCurrent(false) {}
+	Workspace(unsigned int number, TilingManager* _manager)
+	:	mWorkspaceNumber(number), mManager(_manager), mRows(1), mFullscreen(false), mIsCurrent(false) {}
 	
 	/// destructor
 	~Workspace()
@@ -74,6 +74,7 @@ public:
 	}
 
 	unsigned int getElementNumber() {return mWorkspaceNumber;}
+	TilingManager* getManager() {return mManager;}
 
 	void toggleFullscreen();
 	bool isFullscreen() {return mFullscreen;}
@@ -86,7 +87,8 @@ public:
 
 private:
 	unsigned int mWorkspaceNumber;
-	
+	TilingManager* mManager;
+
 	Rect mRect;
 	int mRows;
 	

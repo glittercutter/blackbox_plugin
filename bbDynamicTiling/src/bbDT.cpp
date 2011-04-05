@@ -381,9 +381,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 LRESULT CALLBACK LowLevelKeyboardProc(int code, WPARAM wparam, LPARAM lparam) {
     KBDLLHOOKSTRUCT& kllhs = *(KBDLLHOOKSTRUCT*)lparam;
     if (code == HC_ACTION) {
-        // Test for an 'L' keypress with either Win key down.
+        // Test for an 'L' keypress with either Win key down and no other modifier
         if (wparam == WM_KEYDOWN && kllhs.vkCode == 'L' && 
-            (GetAsyncKeyState(VK_LWIN) < 0 || GetAsyncKeyState(VK_RWIN) < 0))
+            (GetAsyncKeyState(VK_LWIN) < 0 || GetAsyncKeyState(VK_RWIN) < 0) &&
+			GetAsyncKeyState(VK_SHIFT) >= 0 && GetAsyncKeyState(VK_CONTROL) >= 0 &&
+			GetAsyncKeyState(VK_MENU) >= 0)
         {
 			tilingManager->focus(D_RIGHT, T_CLIENT);
 
@@ -424,7 +426,10 @@ void ReadRCSettings(void)
 	the Read... functions give us just the defaults.) */
 
 	g_rcSetting.enableLowLevelKeyHook	= ReadBool(rcpath, RC_KEY("enableLowLevelKeyHook"), true);
-	g_rcSetting.containerBorderSize		= ReadInt(rcpath, RC_KEY("containerBorderSize"), 0);	
+	g_rcSetting.workspaceFullscreenBorderSize = ReadInt(rcpath, RC_KEY("workspaceFullscreenBorderSize"), 0);
+	g_rcSetting.workspaceBorderSize		= ReadInt(rcpath, RC_KEY("workspaceBorderSize"), 0);
+	g_rcSetting.columnBorderSize		= ReadInt(rcpath, RC_KEY("columnBorderSize"), 1);
+	g_rcSetting.containerBorderSize		= ReadInt(rcpath, RC_KEY("containerBorderSize"), 1);	
 	g_rcSetting.clientBorderSize		= ReadInt(rcpath, RC_KEY("clientBorderSize"), 1);
 }
 

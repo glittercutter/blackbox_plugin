@@ -112,6 +112,9 @@ struct Rect
 struct RcSetting
 {
 	bool enableLowLevelKeyHook;
+	int workspaceFullscreenBorderSize;
+	int workspaceBorderSize;
+	int columnBorderSize;
 	int containerBorderSize;
 	int clientBorderSize;
 };

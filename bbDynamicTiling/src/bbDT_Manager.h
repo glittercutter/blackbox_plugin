@@ -57,6 +57,14 @@ public:
 	Client* getFocusedClient();
 	void setFocusedClient(Client* client);
 
+	int getClientBorderSize() {return rcSetting->clientBorderSize;}
+	int getContainerBorderSize() {return rcSetting->containerBorderSize;}
+	int getColumnBorderSize() {return rcSetting->columnBorderSize;}
+	int getWorkspaceBorderSize() {return rcSetting->workspaceBorderSize;}
+	int getWorkspaceFullscreenBorderSize() {return rcSetting->workspaceFullscreenBorderSize;}
+	
+	int getWorkspaceNumber(Workspace* workspace);
+	
 	void removeBorder(HWND hwnd);
 	void addBorder(HWND hwnd);
 

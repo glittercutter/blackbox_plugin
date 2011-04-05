@@ -18,6 +18,7 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 
 #include "bbDT_Column.h"
 #include "bbDT_Workspace.h"
+#include "bbDT_Manager.h"
 
 
 void Column::addClient(Client* client, int element/* = -1*/)
@@ -308,7 +309,11 @@ void Column::update()
 	}
 
 	float baseRowHeight = mParentWorkspace->getRect().getHeight() / sumRowHeightRatio;
-	
+
+	int border = 
+		mParentWorkspace->isFullscreen() == true ?
+		0 : mParentWorkspace->getManager()->getContainerBorderSize();
+
 	for (auto it = mContainers.begin(); it != mContainers.end(); it++)
 	{	
 		if (*it == mContainers.back())
@@ -317,7 +322,7 @@ void Column::update()
 			height = baseRowHeight * mParentWorkspace->getRowHeightFactor((*it)->getElementNumber());
 
 		(*it)->setPosY(y);
-		(*it)->setHeight(height);
+		(*it)->setHeight(height - ((*it)->isLast() ? 0 : border));
 		y += height;
 	}
 

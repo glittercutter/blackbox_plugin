@@ -392,7 +392,7 @@ void TilingManager::addWorkspace(int workspace)
 	Workspace* newWorkspace;
 	for (int i = mWorkspaces.size(); i <= workspace; i++)
 	{
-		newWorkspace = new Workspace(i);
+		newWorkspace = new Workspace(i, this);
 		mWorkspaces.insert(mWorkspaces.begin() + i, newWorkspace); 
 	}
 }
@@ -467,6 +467,15 @@ void TilingManager::addBorder(HWND hwnd)
 {
 	SetWindowLong(hwnd, GWL_STYLE, (GetWindowLong(hwnd, GWL_STYLE) | (WS_CAPTION | WS_SIZEBOX)));
 	SetWindowPos(hwnd, 0, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER);
+}
+
+
+int TilingManager::getWorkspaceNumber(Workspace* workspace)
+{
+	int i = 0;
+	for (auto it = mWorkspaces.begin(); it != mWorkspaces.end(); it++, i++)
+		if (*it == workspace) return i;
+	return 0; // TODO trow an exception
 }
 
 

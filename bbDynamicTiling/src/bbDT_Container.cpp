@@ -152,7 +152,7 @@ void Container::update()
 		rect.Y1 = mY;
 		rect.Y2 = mY + mHeight;
 	}
-	
+
 	y = rect.Y1;
 	float baseHeight = rect.getHeight() / (float)mClients.size();
 
