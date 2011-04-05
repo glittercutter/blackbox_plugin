@@ -297,6 +297,15 @@ void Column::setFocused()
 }
 
 
+void Column::setWidthRatio(float ratio)
+{
+	float minFactor = mParentWorkspace->getManager()->getMinSizeFactor();
+	mWidthRatio = ratio;
+	if (mWidthRatio < minFactor)
+		mWidthRatio = minFactor;
+}
+
+
 void Column::update()
 {
 	float y = (float)mParentWorkspace->getRect().Y1;

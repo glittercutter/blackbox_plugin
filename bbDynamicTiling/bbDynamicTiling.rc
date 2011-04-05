@@ -6,3 +6,6 @@ bbDynamicTiling.workspaceBorderSize: 0
 bbDynamicTiling.columnBorderSize: 1
 bbDynamicTiling.containerBorderSize: 1
 bbDynamicTiling.clientBorderSize: 1
+
+bbDynamicTiling.minSizeFactor: 0.05
+bbDynamicTiling.resizeFactor: 0.1

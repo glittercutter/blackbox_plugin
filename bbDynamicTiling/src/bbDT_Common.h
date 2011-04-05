@@ -47,8 +47,6 @@ class Workspace;
 
 char* find_config_file(char *rcpath, const char *file);
 
-#define MIN_RATIO 0.05
-
 enum Target
 {
 	T_CLIENT,
@@ -109,14 +107,18 @@ struct Rect
 	int X1, Y1, X2, Y2;
 };
 
-struct RcSetting
+struct RCSetting
 {
 	bool enableLowLevelKeyHook;
+
 	int workspaceFullscreenBorderSize;
 	int workspaceBorderSize;
 	int columnBorderSize;
 	int containerBorderSize;
 	int clientBorderSize;
+	
+	float minSizeFactor;
+	float resizeFactor;
 };
 
 #endif

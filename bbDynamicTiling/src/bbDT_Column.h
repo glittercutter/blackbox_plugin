@@ -60,7 +60,7 @@ public:
 	void setWidth(int width) {mWidth = width;}
 
 	float getWidthRatio() {return mWidthRatio;}
-	void setWidthRatio(float ratio) {mWidthRatio = ratio; if (mWidthRatio < MIN_RATIO) mWidthRatio = MIN_RATIO;}
+	void setWidthRatio(float ratio);
 	
 	unsigned int getContainerCount() {return mContainers.size();}
 

@@ -60,18 +60,8 @@ public:
 
 	Rect& getRect() {return mRect;}
 	float getRowHeightFactor(int rowNo) {return (int)mRowsHeightFactor.size() > rowNo ? mRowsHeightFactor[rowNo] : 1.f;}
-	void setRowHeightFactor(int rowNo, float value)
-	{
-		if ((int)mRowsHeightFactor.size() < rowNo) return;
-		mRowsHeightFactor[rowNo] = value;
-		if (mRowsHeightFactor[rowNo] < MIN_RATIO) mRowsHeightFactor[rowNo] = MIN_RATIO;
-	}
-	void resizeRowHeightFactor(int rowNo, float value)
-	{
-		if ((int)mRowsHeightFactor.size() < rowNo) return;
-		mRowsHeightFactor[rowNo] += value;
-		if (mRowsHeightFactor[rowNo] < MIN_RATIO) mRowsHeightFactor[rowNo] = MIN_RATIO;
-	}
+	void setRowHeightFactor(int rowNo, float value);
+	void resizeRowHeightFactor(int rowNo, float value); // same as above, adding offset
 
 	unsigned int getElementNumber() {return mWorkspaceNumber;}
 	TilingManager* getManager() {return mManager;}

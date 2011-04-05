@@ -93,19 +93,19 @@ void TilingManager::resize(Direction dir)
 	switch (dir)
 	{
 	case D_UP:
-		workspace->resizeRowHeightFactor(container->getElementNumber(), 0.08);
+		workspace->resizeRowHeightFactor(container->getElementNumber(), mRCSetting->resizeFactor);
 		break;
 
 	case D_RIGHT:
-		column->setWidthRatio(column->getWidthRatio() + 0.08);
+		column->setWidthRatio(column->getWidthRatio() + mRCSetting->resizeFactor);
 		break;
 
 	case D_DOWN:
-		workspace->resizeRowHeightFactor(container->getElementNumber(), -0.08);
+		workspace->resizeRowHeightFactor(container->getElementNumber(), -mRCSetting->resizeFactor);
 		break;
 
 	case D_LEFT:
-		column->setWidthRatio(column->getWidthRatio() - 0.08);
+		column->setWidthRatio(column->getWidthRatio() - mRCSetting->resizeFactor);
 		break;
 	
 	default: return;

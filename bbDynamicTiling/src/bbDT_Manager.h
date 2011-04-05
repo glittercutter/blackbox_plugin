@@ -25,8 +25,8 @@ class TilingManager
 {
 public:
 	// constructor
-	TilingManager(RcSetting* _rcSetting)
-	:	mCurrentWorkspace(0), rcSetting(_rcSetting)
+	TilingManager(RCSetting* _rcSetting)
+	:	mCurrentWorkspace(0), mRCSetting(_rcSetting)
 	{
 		init();
 	}
@@ -57,11 +57,12 @@ public:
 	Client* getFocusedClient();
 	void setFocusedClient(Client* client);
 
-	int getClientBorderSize() {return rcSetting->clientBorderSize;}
-	int getContainerBorderSize() {return rcSetting->containerBorderSize;}
-	int getColumnBorderSize() {return rcSetting->columnBorderSize;}
-	int getWorkspaceBorderSize() {return rcSetting->workspaceBorderSize;}
-	int getWorkspaceFullscreenBorderSize() {return rcSetting->workspaceFullscreenBorderSize;}
+	int getClientBorderSize() {return mRCSetting->clientBorderSize;}
+	int getContainerBorderSize() {return mRCSetting->containerBorderSize;}
+	int getColumnBorderSize() {return mRCSetting->columnBorderSize;}
+	int getWorkspaceBorderSize() {return mRCSetting->workspaceBorderSize;}
+	int getWorkspaceFullscreenBorderSize() {return mRCSetting->workspaceFullscreenBorderSize;}
+	float getMinSizeFactor() {return mRCSetting->minSizeFactor;}
 	
 	int getWorkspaceNumber(Workspace* workspace);
 	
@@ -84,7 +85,7 @@ private:
 	std::unordered_map<HWND, Client*> mClients;
 	std::unordered_set<std::string> mInclusionList;
 
-	RcSetting* rcSetting;
+	RCSetting* mRCSetting;
 };
 
 #endif

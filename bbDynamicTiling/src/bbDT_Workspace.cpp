@@ -342,6 +342,30 @@ void Workspace::update()
 }
 
 
+void Workspace::setRowHeightFactor(int rowNo, float value)
+{
+	if ((int)mRowsHeightFactor.size() < rowNo) return;
+	
+	mRowsHeightFactor[rowNo] = value;
+	
+	float minFactor = mManager->getMinSizeFactor();
+	if (mRowsHeightFactor[rowNo] < minFactor)
+		mRowsHeightFactor[rowNo] = minFactor;
+}
+
+
+void Workspace::resizeRowHeightFactor(int rowNo, float value)
+{
+	if ((int)mRowsHeightFactor.size() < rowNo) return;
+
+	mRowsHeightFactor[rowNo] += value;
+	
+	float minFactor = mManager->getMinSizeFactor();
+	if (mRowsHeightFactor[rowNo] < minFactor)
+		mRowsHeightFactor[rowNo] = minFactor;
+}
+
+
 int Workspace::getColumnNumber(Column* column)
 {
 	int i = 0;

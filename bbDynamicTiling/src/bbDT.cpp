@@ -83,7 +83,7 @@ extern "C" {
 
 HINSTANCE g_hInstance;
 HHOOK g_lowLevelHook;
-RcSetting g_rcSetting;
+RCSetting g_rcSetting;
 HWND BBhwnd;
 bool under_bblean;
 bool under_xoblite;
@@ -428,11 +428,15 @@ void ReadRCSettings(void)
 	the Read... functions give us just the defaults.) */
 
 	g_rcSetting.enableLowLevelKeyHook	= ReadBool(rcpath, RC_KEY("enableLowLevelKeyHook"), true);
+
 	g_rcSetting.workspaceFullscreenBorderSize = ReadInt(rcpath, RC_KEY("workspaceFullscreenBorderSize"), 0);
 	g_rcSetting.workspaceBorderSize		= ReadInt(rcpath, RC_KEY("workspaceBorderSize"), 0);
 	g_rcSetting.columnBorderSize		= ReadInt(rcpath, RC_KEY("columnBorderSize"), 1);
 	g_rcSetting.containerBorderSize		= ReadInt(rcpath, RC_KEY("containerBorderSize"), 1);	
 	g_rcSetting.clientBorderSize		= ReadInt(rcpath, RC_KEY("clientBorderSize"), 1);
+
+	g_rcSetting.minSizeFactor = strtod(ReadString(rcpath, RC_KEY("minSizeFactor"), "0.05"), NULL);
+	g_rcSetting.resizeFactor = strtod(ReadString(rcpath, RC_KEY("resizeFactor"), "0.1"), NULL);
 }
 
 /* ------------------------------------------------------------------ */
