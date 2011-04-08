@@ -276,6 +276,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 					tilingManager->focus((HWND)wParam);
 					break;
 				case TASKITEM_MODIFIED:
+					tilingManager->updateWindow(NULL);
 					break;
 				case TASKITEM_ACTIVATED:
 					tilingManager->focus((HWND)wParam);

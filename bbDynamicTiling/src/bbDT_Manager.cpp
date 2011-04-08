@@ -313,8 +313,11 @@ void TilingManager::updateWindow(HWND hwnd)
 	}
 	else
 	*/ 
-		for (auto it = mClients.begin(); it != mClients.end(); it++)
-			updateClientWorkspace(it->second);
+	for (auto it = mClients.begin(); it != mClients.end(); it++)
+		updateClientWorkspace(it->second);
+	
+	if (mCurrentWorkspace)
+		mCurrentWorkspace->update();
 }
 
 
@@ -500,7 +503,9 @@ void TilingManager::init()
 	updateDesktopInfo();
 	readInclusionFile();
 	
-	for (int i = 0; i < GetTaskListSize(); i++)
+	int ts = GetTaskListSize();
+
+	for (int i = 0; i < ts; i++)
 		addWindow(GetTask(i));
 
 	for (auto it = mWorkspaces.begin(); it != mWorkspaces.end(); it++)
