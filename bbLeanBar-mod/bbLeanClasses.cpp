@@ -1399,10 +1399,9 @@ public:
     int max_clock_width;
     int trayzone_width;
 	int workspacezone_width;
-	bool isEnabled;
 
     //-----------------------------
-    LeanBar(barinfo *bi) : baritemlist(M_BARLIST, bi), isEnabled(true)
+    LeanBar(barinfo *bi) : baritemlist(M_BARLIST, bi)
     {
     }
 
