@@ -218,6 +218,8 @@ void Container::getSharedDimension(Rect* rect)
 int Container::requestSharing(Container* container)
 {
 	if (mSharedBy) return -1;
+	if (!mClients.empty()) return -1;
+
 	mSharedBy = container;
 	return 0;
 }
