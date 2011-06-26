@@ -222,7 +222,8 @@ void endPlugin(HINSTANCE hPluginInstance)
 	/* Unhook low level keyboard hook... */
 	if (g_rcSetting.enableLowLevelKeyHook)
 		UnhookWindowsHookEx(g_lowLevelHook);
-
+	
+	dbg_printf("endPlugin");
 	delete tilingManager;
 }
 
@@ -265,7 +266,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		case BB_RECONFIGURE:
 			ReadRCSettings();
-			tilingManager->reset();
+			
+			// This message is called when a fullscreen program return.
+			// We don't want to lose all settings
+// 			tilingManager->reset();
+			
 			break;
 
 		case BB_TASKSUPDATE:
@@ -365,9 +370,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		/* ---------------------------------------------------------- */
 		/* prevent the user from closing the plugin with alt-F4 */
-
 		case WM_CLOSE:
-				break;
+			break;
 
 		default:
 			return DefWindowProc(hwnd, message, wParam, lParam); /* We aren't handling this message so return DefWindowProc */

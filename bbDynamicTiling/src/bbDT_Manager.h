@@ -26,7 +26,7 @@ class TilingManager
 public:
 	// constructor
 	TilingManager(RCSetting* _rcSetting)
-	:	mCurrentWorkspace(0), mRCSetting(_rcSetting)
+	:	mCurrentWorkspace(0), mRCSetting(_rcSetting)//, mFullscreenWindow(0)
 	{
 		init();
 	}
@@ -86,6 +86,8 @@ private:
 	std::unordered_set<std::string> mInclusionList;
 
 	RCSetting* mRCSetting;
+
+// 	HWND mFullscreenWindow;
 };
 
 #endif

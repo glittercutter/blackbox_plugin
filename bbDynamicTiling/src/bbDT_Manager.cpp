@@ -132,8 +132,23 @@ void TilingManager::toggleFloating()
 }
 
 
+// bool IsFullScreenMode(HWND hWnd)
+// {
+// 	if (GetWindowLong(hWnd, GWL_EXSTYLE) & WS_EX_TOPMOST)
+// 	{
+// 		RECT rect;
+// 		GetWindowRect(hWnd, &rect);
+// 		if ((GetSystemMetrics(SM_CXSCREEN) == (rect.right - rect.left)) &&
+// 			(GetSystemMetrics(SM_CYSCREEN) == (rect.bottom - rect.top)))
+// 			return true;
+// 	}
+// 	return false;
+// }
+
+
 void TilingManager::addWindow(HWND hwnd, bool ignoreList/* = false*/)
 {
+// 	if (IsFullScreenMode(hwnd) && mFullscreenWindow == 0) mFullscreenWindow = hwnd;
 	if (!ignoreList) if (!checkInclusionList(hwnd)) return;
 	
 	// check if we have this window already
@@ -144,19 +159,18 @@ void TilingManager::addWindow(HWND hwnd, bool ignoreList/* = false*/)
 		addWorkspace(workspaceNo);
 	
 	Client* newClient = new Client(hwnd);
-	///	add client in map for fast lookup
+	///	add the client in a hashtable for fast lookup
 	mClients.insert(std::pair<HWND, Client*>(hwnd, newClient));
 	
 	mWorkspaces[workspaceNo]->addClient(newClient);
-
 	removeBorder(hwnd);
-
 	mWorkspaces[workspaceNo]->update();
 }
 
 
 void TilingManager::removeWindow(HWND hwnd)
 {
+// 	if (hwnd == mFullscreenWindow) mFullscreenWindow = 0;
 	Client* client = getClient(hwnd);
 	if (!client) return;
 
@@ -500,6 +514,7 @@ void TilingManager::clear()
 
 void TilingManager::init()
 {	
+	dbg_printf("init");
 	updateDesktopInfo();
 	readInclusionFile();
 	
@@ -518,6 +533,7 @@ void TilingManager::init()
 
 void TilingManager::reset()
 {
+// 	if (mFullscreenWindow) return;
 	clear();	
 	init();
 }

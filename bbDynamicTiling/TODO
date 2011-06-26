@@ -1,2 +1,4 @@
+BUG CONDITION-> two windows tiled verticaly, can't move focus to the right
+
 try fixing wandering window by forcing workspace move by broam message only i.e.:
 checking if the window workspace is the same we have for this window
