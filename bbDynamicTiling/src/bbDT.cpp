@@ -223,7 +223,6 @@ void endPlugin(HINSTANCE hPluginInstance)
 	if (g_rcSetting.enableLowLevelKeyHook)
 		UnhookWindowsHookEx(g_lowLevelHook);
 	
-	dbg_printf("endPlugin");
 	delete tilingManager;
 }
 

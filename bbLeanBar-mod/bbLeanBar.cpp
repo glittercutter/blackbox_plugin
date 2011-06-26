@@ -39,6 +39,7 @@
 #include <shellapi.h>
 #include <shlobj.h>
 #include <time.h>
+#include <cstring>
 
 #ifndef ASFW_ANY
 #define ASFW_ANY ((DWORD)-1)
@@ -1449,7 +1450,7 @@ void barinfo::process_broam(const char *temp, int f)
     for (cp = cfg_menu; cp->displ; cp++)
     {
         int n = strlen(cp->msg);
-        if (n && 0 == memicmp(temp, cp->msg, n))
+        if (n && 0 == _memicmp(temp, cp->msg, n))
         {
             if (cp->ptr)
             {

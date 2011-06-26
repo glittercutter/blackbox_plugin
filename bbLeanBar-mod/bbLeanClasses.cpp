@@ -1325,11 +1325,19 @@ public:
 			ws[deskInfo.number] = true;
 		}
 
-		for (int i = 0; i < MAX_WORKSPACE; i++)
-		{
-			// check if the workspaces changed
-			if (ws[i] != m_wstate[i])
-			{
+/*
+	===========
+	FIX: The labels were empty after a fullscreen program returned
+	NOTE: With those lines commented the labels are drawn/updated even if they didn't changed
+	===========
+*/
+
+// 		for (int i = 0; i < MAX_WORKSPACE; i++)
+// 		{
+// 			// check if a workspaces changed
+// 			if (ws[i] != m_wstate[i])
+// 			{
+// 				dbg_printf("update");
 				width = 0;
 			    clear();
 				int n = 0;
@@ -1343,9 +1351,9 @@ public:
 				// save current state
 				for (int j = 0; j < MAX_WORKSPACE; j++)
 					m_wstate[j] = ws[j];
-				break;
-			}
-		}
+// 				break;
+// 			}
+// 		}
 		return width;
 	}
 
@@ -1357,34 +1365,32 @@ public:
             baritem::invalidate(0);
     }
 
-    void mouse_event(int mx, int my, int message, unsigned flags)
-    {
-		/*
-        if ((MK_ALT|MK_CONTROL) & flags)
-        {
-            if (WM_RBUTTONDOWN == message)
-                return;
-            if (WM_RBUTTONDBLCLK == message)
-                return;
-            if (WM_RBUTTONUP == message) {
-                if (MK_ALT & flags)
-                    m_bar->trayToggleShowAll(-1);
-                else
-                    m_bar->trayMenu(true);
-                return;
-            }
-        }
-		*/
-        baritemlist::mouse_event(mx, my, message, flags);
-    }
+//     void mouse_event(int mx, int my, int message, unsigned flags)
+//     {
+// 		/*
+//         if ((MK_ALT|MK_CONTROL) & flags)
+//         {
+//             if (WM_RBUTTONDOWN == message)
+//                 return;
+//             if (WM_RBUTTONDBLCLK == message)
+//                 return;
+//             if (WM_RBUTTONUP == message) {
+//                 if (MK_ALT & flags)
+//                     m_bar->trayToggleShowAll(-1);
+//                 else
+//                     m_bar->trayMenu(true);
+//                 return;
+//             }
+//         }
+// 		*/
+//         baritemlist::mouse_event(mx, my, message, flags);
+//     }
 
-/*
-    void draw()
-    {
-        m_bar->pBuff->MakeStyleGradient(hdcPaint,  &mr, TaskStyle_L, false);
-        baritemlist::draw();
-    }
-*/
+//     void draw()
+//     {
+//         m_bar->pBuff->MakeStyleGradient(hdcPaint,  &mr, TaskStyle_L, false);
+//         baritemlist::draw();
+//     }
 };
 
 //===========================================================================
@@ -1741,18 +1747,6 @@ public:
         *p0 = p;
         return f;
     }
-
-	void toggle()
-	{
-		if (m_isEnabled)
-			
-		else
-			
-
-		m_isEnabled = !m_isEnabled;
-		invalidatete(UDP_NEW);
-	}
-
 };
 
 //===========================================================================

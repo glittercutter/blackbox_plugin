@@ -461,7 +461,6 @@ int TilingManager::getModuleName(HWND hwnd, char *buffer, int buffsize)
     r = GetModuleFileName(hi, sFileName, MAX_PATH);
     if (0 == r)
     {
-		dbg_printf("%s", GetLastError());
 	    r = GetModuleFileName(NULL, sFileName, MAX_PATH);
     }
 	for (i = r; i && sFileName[i-1] != '\\'; i--);
@@ -514,7 +513,6 @@ void TilingManager::clear()
 
 void TilingManager::init()
 {	
-	dbg_printf("init");
 	updateDesktopInfo();
 	readInclusionFile();
 	

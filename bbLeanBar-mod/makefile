@@ -3,7 +3,7 @@
 
 TOP = ../..
 
-BIN = bbLeanBar.dll
+BIN = bbLeanBar-mod.dll
 OBJ = \
   bbLeanBar.obj \
   bbPlugin.obj \

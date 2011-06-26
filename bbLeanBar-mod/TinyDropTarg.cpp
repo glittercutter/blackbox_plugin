@@ -55,12 +55,12 @@ TinyDropTarget::TinyDropTarget(HWND hwnd)
     task_over = 0;
     valid_data = false;
     //dbg_printf("created");
-};
+}
 
 TinyDropTarget::~TinyDropTarget()
 {
     //dbg_printf("deleted");
-};
+}
 
 STDMETHODIMP TinyDropTarget::QueryInterface(REFIID iid, void** ppvObject)
 {
