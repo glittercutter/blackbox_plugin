@@ -25,12 +25,12 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 /* plugin info */
 
 const char szAppName[]        = "bbDynamicTiling";
-const char szInfoVersion[]    = "0.1";
+const char szInfoVersion[]    = "0.1.2";
 const char szInfoAuthor[]     = "Sebastien Raymond";
-const char szInfoRelDate[]    = "2011-04-01";
+const char szInfoRelDate[]    = "2011-12-19";
 const char szInfoLink[]       = "http://glittercutter.github.com";
 const char szInfoEmail[]      = "";
-const char szVersion[]        = "bbDynamicTiling 0.1"; /* fallback for pluginInfo() */
+const char szVersion[]        = "bbDynamicTiling 0.1.2"; /* fallback for pluginInfo() */
 const char szCopyright[]      = "Sebastien Raymond 2011";
 
 /* ---------------------------------- */
