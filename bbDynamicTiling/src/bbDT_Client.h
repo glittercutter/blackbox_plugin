@@ -21,52 +21,51 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 
 #include "bbDT_Common.h"
 
-
 class Client
 {
 public:
-	// constructor
-	Client(HWND hwnd)
-	:	mParentContainer(0), mHwnd(hwnd)
-	{
-		// get floating rect
-		RECT rect;
-		if (GetWindowRect(hwnd, &rect))
-			mFloatingRect = &rect;
-	}
-	// destructor
-	~Client()
-	{
-		// restore floating rect
-		SetWindowPos(
-			mHwnd, NULL,
-			mFloatingRect.X1, mFloatingRect.Y1, 
-			mFloatingRect.getWidth(), mFloatingRect.getHeight(), 
-			SWP_NOACTIVATE | SWP_NOOWNERZORDER | SWP_NOSENDCHANGING);
-	}
-	
-	HWND getWindow() {return mHwnd;}
-	Container* getParentContainer() {return mParentContainer;}
-	void setParentContainer(Container* container) {mParentContainer = container;}
+    // constructor
+    Client(HWND hwnd)
+    :    mParentContainer(0), mHwnd(hwnd)
+    {
+        // get floating rect
+        RECT rect;
+        if (GetWindowRect(hwnd, &rect))
+            mFloatingRect = &rect;
+    }
+    // destructor
+    ~Client()
+    {
+        // restore floating rect
+        SetWindowPos(
+            mHwnd, NULL,
+            mFloatingRect.X1, mFloatingRect.Y1, 
+            mFloatingRect.getWidth(), mFloatingRect.getHeight(), 
+            SWP_NOACTIVATE | SWP_NOOWNERZORDER | SWP_NOSENDCHANGING);
+    }
+    
+    HWND getWindow() {return mHwnd;}
+    Container* getParentContainer() {return mParentContainer;}
+    void setParentContainer(Container* container) {mParentContainer = container;}
 
-	const Rect* getRect() {return &mRect;}
-	void setRect(const Rect& rect);
+    const Rect* getRect() {return &mRect;}
+    void setRect(const Rect& rect);
 
-	int getElementNumber();
+    int getElementNumber();
 
-	void drawBorder();
-	void setFocused();
+    void drawBorder();
+    void setFocused();
 
-	bool isFirst();
-	bool isLast();
+    bool isFirst();
+    bool isLast();
 
-	void update();
+    void update();
 
 private:
-	Container* mParentContainer;
-	HWND mHwnd;
-	Rect mRect;
-	Rect mFloatingRect;
+    Container* mParentContainer;
+    HWND mHwnd;
+    Rect mRect;
+    Rect mFloatingRect;
 };
 
 #endif

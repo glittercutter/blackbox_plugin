@@ -24,74 +24,73 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 
 enum Shared
 {
-	S_INVALID = 0,
-	S_HORIZONTAL,
-	S_VERTICAL
+    S_INVALID = 0,
+    S_HORIZONTAL,
+    S_VERTICAL
 };
-
 
 class Container
 {
 public:
-	///	constructor
-	Container(Column* col)
-	:	mParentColumn(col), mY(0), mHeight(0), mSharedBy(0)
+    ///    constructor
+    Container(Column* col)
+    :    mParentColumn(col), mY(0), mHeight(0), mSharedBy(0)
     {}
-	
-	/// destructor
-	~Container()
-	{
-		clearSharedContainer();
-		if (mSharedBy) mSharedBy->removeShare(this);
-	}
+    
+    /// destructor
+    ~Container()
+    {
+        clearSharedContainer();
+        if (mSharedBy) mSharedBy->removeShare(this);
+    }
 
-	void addClient(Client* client, Direction = D_INVALID);
-	int removeClient(Client* client);
-	int moveClient(Client* client, Direction dir);
-	int focus(Client* client, Direction dir);
+    void addClient(Client* client, Direction = D_INVALID);
+    int removeClient(Client* client);
+    int moveClient(Client* client, Direction dir);
+    int focus(Client* client, Direction dir);
 
-	int getClientCount() {return mClients.size();}
-	void setFocusedClient(Client* client);
-	void setFocused();
-	
-	int requestSharing(Container* container);
-	int releaseSharing(Container* container);
-	void removeShare(Container* container);
-	void clearSharedContainer();
-	std::list<Container*>* getSharedContainer() {return &mSharedContainers;}
-	int addSharedContainer(Container* container);
+    int getClientCount() {return mClients.size();}
+    void setFocusedClient(Client* client);
+    void setFocused();
+    
+    int requestSharing(Container* container);
+    int releaseSharing(Container* container);
+    void removeShare(Container* container);
+    void clearSharedContainer();
+    std::list<Container*>* getSharedContainer() {return &mSharedContainers;}
+    int addSharedContainer(Container* container);
 
-	Client* getFocusedClient() {return !mClientsFocus.empty() ? mClientsFocus.back() : 0;}
-	std::deque<Client*>* getClients() {return &mClients;}
+    Client* getFocusedClient() {return !mClientsFocus.empty() ? mClientsFocus.back() : 0;}
+    std::deque<Client*>* getClients() {return &mClients;}
 
-	int getPosY() {return mY;}
-	int getHeight() {return mHeight;}
-	void setPosY(int pos) {mY = pos;}
-	void setHeight(int height) {mHeight = height;}
-	void getSharedDimension(Rect* rect);
+    int getPosY() {return mY;}
+    int getHeight() {return mHeight;}
+    void setPosY(int pos) {mY = pos;}
+    void setHeight(int height) {mHeight = height;}
+    void getSharedDimension(Rect* rect);
 
-	Column* getParentColumn() {return mParentColumn;}
-	int getElementNumber();
-	int getClientNumber(Client* client);
+    Column* getParentColumn() {return mParentColumn;}
+    int getElementNumber();
+    int getClientNumber(Client* client);
 
-	bool isFirst();
-	bool isLast();
-	Shared isShared();	
+    bool isFirst();
+    bool isLast();
+    Shared isShared();    
 
-	void update();
+    void update();
 
 private:
-	Column* mParentColumn;
-	
-	int mY;
-	int mHeight;
-	
-	// containers can expand in empty ones
-	std::list<Container*> mSharedContainers;
-	Container* mSharedBy;
+    Column* mParentColumn;
+    
+    int mY;
+    int mHeight;
+    
+    // containers can expand in empty ones
+    std::list<Container*> mSharedContainers;
+    Container* mSharedBy;
 
-	std::deque<Client*> mClients;
-	std::list<Client*> mClientsFocus; // ordered by focus (last first)
+    std::deque<Client*> mClients;
+    std::list<Client*> mClientsFocus; // ordered by focus (last first)
 };
 
 #endif

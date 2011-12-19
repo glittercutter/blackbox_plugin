@@ -24,30 +24,30 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 class Monitor
 {
 public:
-	Monitor(HMONITOR hM, int no)
-	:	mHMonitor(hM), mFlaggedForDeletion(false), mMonitorNo(no)
-	{}
+    Monitor(HMONITOR hM, int no)
+    :    mHMonitor(hM), mFlaggedForDeletion(false), mMonitorNo(no)
+    {}
 
-// 	void setRect(Rect& rect) {mRect = rect;}
-	Rect& getRect() {return mRect;}
+//     void setRect(Rect& rect) {mRect = rect;}
+    Rect& getRect() {return mRect;}
 
-	void setFlaggedForDeletion(bool state) {mFlaggedForDeletion = state;}
-	bool isFlaggedForDeletion() {return mFlaggedForDeletion;}
+    void setFlaggedForDeletion(bool state) {mFlaggedForDeletion = state;}
+    bool isFlaggedForDeletion() {return mFlaggedForDeletion;}
 
-	int getMonitorNo() {return mMonitorNo;}
+    int getMonitorNo() {return mMonitorNo;}
 
-	void update()
-	{
-		RECT r;
-		GetMonitorRect(mHMonitor, &r, GETMON_FROM_MONITOR | GETMON_WORKAREA);
-		mRect = &r;
-	}
+    void update()
+    {
+        RECT r;
+        GetMonitorRect(mHMonitor, &r, GETMON_FROM_MONITOR | GETMON_WORKAREA);
+        mRect = &r;
+    }
 
 private:
-	Rect mRect;
-	HMONITOR mHMonitor;
-	bool mFlaggedForDeletion;
-	int mMonitorNo;
+    Rect mRect;
+    HMONITOR mHMonitor;
+    bool mFlaggedForDeletion;
+    int mMonitorNo;
 };
 
 #endif
