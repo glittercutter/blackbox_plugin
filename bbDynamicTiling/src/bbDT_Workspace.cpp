@@ -302,10 +302,7 @@ void Workspace::update()
 {
 	if (mColumns.empty()) return;
 	
-	HWND hwnd = GetDesktopWindow();
-	RECT rect;
-	GetMonitorRect(hwnd, &rect, GETMON_FROM_WINDOW | GETMON_WORKAREA);
-	mRect = &rect;
+	mRect = mMonitor->getRect();
 	mRows = mColumns.back()->getContainerCount();
 
 	int workspaceBorder = isFullscreen() == true ? 
@@ -324,11 +321,10 @@ void Workspace::update()
 	float x = mRect.X1;
 	float width;
 
-
 	for (auto it = mColumns.begin(); it != mColumns.end(); it++)
 	{
 		if (*it == mColumns.back())
-			width = mRect.getWidth() - (int)x;
+			width = mRect.X2 - (int)x;
 		else
 			width = (*it)->getWidthRatio() * baseWidth;
 
@@ -342,11 +338,15 @@ void Workspace::update()
 }
 
 
-void Workspace::setRowHeightFactor(int rowNo, float value)
+void Workspace::resizeRow(int rowNo, int resizePixel)
 {
 	if ((int)mRowsHeightFactor.size() < rowNo) return;
 	
-	mRowsHeightFactor[rowNo] = value;
+	float rr = 0.f;
+	for (auto it = mRowsHeightFactor.begin(); it != mRowsHeightFactor.end(); it++)
+		rr += *it;
+	rr += mRowsHeightFactor[rowNo];
+	mRowsHeightFactor[rowNo] += ((rr / (float)mRect.getHeight()) * resizePixel);
 	
 	float minFactor = mManager->getMinSizeFactor();
 	if (mRowsHeightFactor[rowNo] < minFactor)
@@ -354,15 +354,13 @@ void Workspace::setRowHeightFactor(int rowNo, float value)
 }
 
 
-void Workspace::resizeRowHeightFactor(int rowNo, float value)
+void Workspace::resizeColumn(Column* col, int resizePixel)
 {
-	if ((int)mRowsHeightFactor.size() < rowNo) return;
-
-	mRowsHeightFactor[rowNo] += value;
-	
-	float minFactor = mManager->getMinSizeFactor();
-	if (mRowsHeightFactor[rowNo] < minFactor)
-		mRowsHeightFactor[rowNo] = minFactor;
+	float wr = 0.f;
+	for (auto it = mColumns.begin(); it != mColumns.end(); it++)
+		wr += (*it)->getWidthRatio();
+	wr += col->getWidthRatio();
+	col->setWidthRatio(col->getWidthRatio() + ((wr / (float)mRect.getWidth()) * resizePixel));
 }
 
 

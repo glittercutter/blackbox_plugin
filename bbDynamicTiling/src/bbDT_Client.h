@@ -27,7 +27,7 @@ class Client
 public:
 	// constructor
 	Client(HWND hwnd)
-	:	mHwnd(hwnd)
+	:	mParentContainer(0), mHwnd(hwnd)
 	{
 		// get floating rect
 		RECT rect;

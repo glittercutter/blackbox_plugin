@@ -35,7 +35,8 @@ class Container
 public:
 	///	constructor
 	Container(Column* col)
-	:	mParentColumn(col), mSharedBy(0) {}
+	:	mParentColumn(col), mY(0), mHeight(0), mSharedBy(0)
+    {}
 	
 	/// destructor
 	~Container()

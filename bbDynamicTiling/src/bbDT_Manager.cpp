@@ -19,8 +19,10 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 #include "bbDT_Manager.h"
 
 #include "bbDT_Column.h"
+#include "bbDT_Monitor.h"
 #include "bbDT_Workspace.h"
 
+#include <Tlhelp32.h> // GetModuleFileNameEx
 
 void TilingManager::move(Direction dir, Target target)
 {
@@ -89,26 +91,28 @@ void TilingManager::resize(Direction dir)
 	
 	if (!client) return;
 	if (dir == D_INVALID) return;
+
+	int p = mRCSetting->resizePixel;
 	
 	switch (dir)
 	{
-	case D_UP:
-		workspace->resizeRowHeightFactor(container->getElementNumber(), mRCSetting->resizeFactor);
-		break;
+        case D_UP:
+            workspace->resizeRow(container->getElementNumber(), p);
+            break;
 
-	case D_RIGHT:
-		column->setWidthRatio(column->getWidthRatio() + mRCSetting->resizeFactor);
-		break;
+        case D_RIGHT:
+            workspace->resizeColumn(column, p);
+            break;
 
-	case D_DOWN:
-		workspace->resizeRowHeightFactor(container->getElementNumber(), -mRCSetting->resizeFactor);
-		break;
+        case D_DOWN:
+            workspace->resizeRow(container->getElementNumber(), -p);
+            break;
 
-	case D_LEFT:
-		column->setWidthRatio(column->getWidthRatio() - mRCSetting->resizeFactor);
-		break;
-	
-	default: return;
+        case D_LEFT:
+            workspace->resizeColumn(column, -p);
+            break;
+        
+        default: return;
 	}
 
 	workspace->update();
@@ -132,26 +136,9 @@ void TilingManager::toggleFloating()
 }
 
 
-// bool IsFullScreenMode(HWND hWnd)
-// {
-// 	if (GetWindowLong(hWnd, GWL_EXSTYLE) & WS_EX_TOPMOST)
-// 	{
-// 		RECT rect;
-// 		GetWindowRect(hWnd, &rect);
-// 		if ((GetSystemMetrics(SM_CXSCREEN) == (rect.right - rect.left)) &&
-// 			(GetSystemMetrics(SM_CYSCREEN) == (rect.bottom - rect.top)))
-// 			return true;
-// 	}
-// 	return false;
-// }
-
-
 void TilingManager::addWindow(HWND hwnd, bool ignoreList/* = false*/)
 {
-// 	if (IsFullScreenMode(hwnd) && mFullscreenWindow == 0) mFullscreenWindow = hwnd;
 	if (!ignoreList) if (!checkInclusionList(hwnd)) return;
-	
-	// check if we have this window already
 	if (mClients.find(hwnd) != mClients.end()) return;
 	
 	unsigned int workspaceNo = GetTaskWorkspace(hwnd);
@@ -159,7 +146,6 @@ void TilingManager::addWindow(HWND hwnd, bool ignoreList/* = false*/)
 		addWorkspace(workspaceNo);
 	
 	Client* newClient = new Client(hwnd);
-	///	add the client in a hashtable for fast lookup
 	mClients.insert(std::pair<HWND, Client*>(hwnd, newClient));
 	
 	mWorkspaces[workspaceNo]->addClient(newClient);
@@ -170,7 +156,6 @@ void TilingManager::addWindow(HWND hwnd, bool ignoreList/* = false*/)
 
 void TilingManager::removeWindow(HWND hwnd)
 {
-// 	if (hwnd == mFullscreenWindow) mFullscreenWindow = 0;
 	Client* client = getClient(hwnd);
 	if (!client) return;
 
@@ -191,6 +176,7 @@ void TilingManager::removeWindow(HWND hwnd)
 	}
 	else
 	{
+		// TODO
 // 		cleanupAll();
 // 		updateAll();
 	}
@@ -357,9 +343,65 @@ void TilingManager::updateClientWorkspace(Client* client)
 }
 
 
+
+void TilingManager::addMonitor(HMONITOR hM)
+{
+	auto it = mMonitors.find(hM);
+	if (it == mMonitors.end())
+	{
+		Monitor* newM = new Monitor(hM, mMonitors.size());
+		it = mMonitors.insert(std::pair<HMONITOR, Monitor*>(hM, newM)).first;
+	}
+	it->second->setFlaggedForDeletion(false);
+	it->second->update();
+}
+
+
+void TilingManager::removeMonitor(HMONITOR hM)
+{
+	auto it = mMonitors.find(hM);
+	if (it == mMonitors.end()) return;
+	
+	for (auto ws = mWorkspaces.begin(); ws != mWorkspaces.end(); ws++)
+	{
+		if ((*ws)->getMonitor() == it->second)
+			if (!mMonitors.empty())
+				(*ws)->setMonitor(getMonitor(0));
+	}
+
+	delete it->second;
+	mMonitors.erase(it);
+}
+
+
+BOOL CALLBACK MonitorEnumProc(
+	HMONITOR hMonitor,
+	HDC hdcMonitor,
+	LPRECT lprcMonitor,
+	LPARAM dwData)
+{
+	((TilingManager*)dwData)->addMonitor(hMonitor);
+	return true;
+}
+
+
+void TilingManager::updateMonitorInfo()
+{
+	EnumDisplayMonitors(NULL, NULL, MonitorEnumProc, (LPARAM)this);
+	for (auto it = mMonitors.begin(); it != mMonitors.end(); it++)
+	{
+		if (it->second->isFlaggedForDeletion())
+			removeMonitor(it->first);
+		else
+			it->second->setFlaggedForDeletion(true);
+	}
+}
+
+
 void TilingManager::updateDesktopInfo()
 {
-	// TODO multiple screen handling
+	updateMonitorInfo();
+
 	DesktopInfo deskInfo;
 	GetDesktopInfo(&deskInfo);
 	if (deskInfo.isCurrent)
@@ -403,25 +445,54 @@ void TilingManager::setFocusedClient(Client* client)
 }
 
 
-///	add missing workspaces from '0' to 'workspace'
+///	add all missing workspaces from '0' to 'workspace'
 void TilingManager::addWorkspace(int workspace)
 {
 	Workspace* newWorkspace;
 	for (int i = mWorkspaces.size(); i <= workspace; i++)
 	{
-		newWorkspace = new Workspace(i, this);
+		newWorkspace = new Workspace(i, this, getWorkspaceMonitor(i));
 		mWorkspaces.insert(mWorkspaces.begin() + i, newWorkspace); 
 	}
 }
 
 
-// TODO read module name too
+Monitor* TilingManager::getWorkspaceMonitor(int n)
+{
+    /* Multiple monitor not inplemented yet */
+    
+// 	auto it = mRCSetting->workspaceDefaultMonitor.find(n);
+// 	if (it != mRCSetting->workspaceDefaultMonitor.end())
+// 		return it.second;
+
+// 	if (n < (int)mMonitors.size())
+// 		return getMonitor(n);
+// 	
+// 	if (mCurrentWorkspace)
+// 		return mCurrentWorkspace->getMonitor();
+//  
+// 	if (mMonitors.empty())
+// 		assert("mMonitors.empty() == true");
+	
+	return getMonitor(0);
+}
+
+
+Monitor* TilingManager::getMonitor(int n)
+{
+	for (auto it = mMonitors.begin(); it != mMonitors.end(); it++)
+		if (it->second->getMonitorNo() == n) return it->second;
+	assert();
+	return 0;
+}
+
+
 void TilingManager::readInclusionFile()
 {
 	mInclusionList.clear();
 	
 	char exclusionspath[MAX_PATH];
-    FILE *fp = FileOpen(find_config_file(exclusionspath, INCLUSION_FILE));
+    FILE *fp = FileOpen(find_config_file(exclusionspath, INCLUSION_FILENAME));
     if (fp) for (;;)
     {
         char line_buffer[256];
@@ -435,41 +506,23 @@ void TilingManager::readInclusionFile()
 }
 
 
-///	check if the window class is in the inclusion list
-bool TilingManager::checkInclusionList(HWND hwnd)
+bool TilingManager::checkInclusionList(HWND hWnd)
 {
-	char className[200]; className[0] = 0;
-	GetClassName(hwnd, className, sizeof className);
+    // From executable filename
+    DWORD processId;
+    GetWindowThreadProcessId(hWnd, &processId); 
 
-// TODO 'getModuleName' always return blackbox.exe ??
+    HANDLE snap = CreateToolhelp32Snapshot(TH32CS_SNAPALL, 0);
+    PROCESSENTRY32 pe32; pe32.dwSize = sizeof(PROCESSENTRY32);
+    Process32First(snap, &pe32);
+    do if (pe32.th32ProcessID == processId && mInclusionList.find(pe32.szExeFile) != mInclusionList.end()) return true;
+    while (Process32Next(snap, &pe32));
 
-// 	char fileName[200]; fileName[0] = 0;
-// 	getModuleName(hwnd, fileName, sizeof fileName);
-// 	
-// 	dbg_printf("%s:%s, %s:%s\n", "class", className, "module", fileName);
-	if (mInclusionList.find(className) != mInclusionList.end())
-		return true;
+    // From window class
+	char buff[256]; buff[0] = '\0';
+	if (GetClassName(hWnd, buff, sizeof buff) && mInclusionList.find(buff) != mInclusionList.end()) return true;
 
 	return false;
-}
-
-// TODO always return blackbox.exe ??
-int TilingManager::getModuleName(HWND hwnd, char *buffer, int buffsize)
-{
-    char sFileName[MAX_PATH]; HINSTANCE hi; int i, r;
-    hi = (HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE);
-    r = GetModuleFileName(hi, sFileName, MAX_PATH);
-    if (0 == r)
-    {
-	    r = GetModuleFileName(NULL, sFileName, MAX_PATH);
-    }
-	for (i = r; i && sFileName[i-1] != '\\'; i--);
-    r -= i;
-    if (r >= buffsize)
-        r = buffsize-1;
-    memcpy(buffer, sFileName + i, r);
-    buffer[r] = 0;
-    return r;
 }
 
 
@@ -491,7 +544,8 @@ int TilingManager::getWorkspaceNumber(Workspace* workspace)
 	int i = 0;
 	for (auto it = mWorkspaces.begin(); it != mWorkspaces.end(); it++, i++)
 		if (*it == workspace) return i;
-	return 0; // TODO trow an exception
+	assert("if (*it == workspace) return i;");
+	return 0;
 }
 
 
@@ -515,7 +569,7 @@ void TilingManager::init()
 {	
 	updateDesktopInfo();
 	readInclusionFile();
-	
+
 	int ts = GetTaskListSize();
 
 	for (int i = 0; i < ts; i++)
@@ -531,7 +585,6 @@ void TilingManager::init()
 
 void TilingManager::reset()
 {
-// 	if (mFullscreenWindow) return;
 	clear();	
 	init();
 }

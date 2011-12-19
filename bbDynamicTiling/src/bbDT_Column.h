@@ -28,7 +28,7 @@ class Column
 public:
 	///	constructor
 	Column(Workspace* workspace, int row)
-	:	mParentWorkspace(workspace), mWidthRatio(1.0f)
+	:	mParentWorkspace(workspace), mX(0), mWidth(0), mWidthRatio(1.0f)
 	{
 		for (int i = 0; i < row; i++)
 			addContainer();

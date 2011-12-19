@@ -7,8 +7,8 @@ DEPS := $(wildcard $(OBJDIR)/*.d)
 EXE = bbDynamicTiling.dll
 
 CFLAGS	= -Wall -pedantic -Werror -pipe -std=c++0x
-LFLAGS	= -mwindows -shared
-LIBS	= -lblackbox -lbblib -lversion -lkernel32 -luser32 -lgdi32
+LFLAGS	= -mwindows -shared -L./
+LIBS	= -lblackbox -lbblib -lversion -lkernel32 -luser32 -lgdi32 -lPsapi
 
 ifeq ($(build_type), debug)
 	CFLAGS += -O0 -g #-pg

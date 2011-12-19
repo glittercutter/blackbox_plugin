@@ -22,12 +22,17 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 #include "bbDT_Common.h"
 #include "bbDT_Column.h"
 
+// TEMP
+#include "bbDT_Monitor.h"
+
 class Workspace
 {
 public:
 	// constructor
-	Workspace(unsigned int number, TilingManager* _manager)
-	:	mWorkspaceNumber(number), mManager(_manager), mRows(1), mFullscreen(false), mIsCurrent(false) {}
+	Workspace(unsigned int number, TilingManager* _manager, Monitor* m)
+	:	mWorkspaceNumber(number), mManager(_manager), mMonitor(m), mRows(1),
+		mFullscreen(false), mIsCurrent(false)
+	{}
 	
 	/// destructor
 	~Workspace()
@@ -60,8 +65,8 @@ public:
 
 	Rect& getRect() {return mRect;}
 	float getRowHeightFactor(int rowNo) {return (int)mRowsHeightFactor.size() > rowNo ? mRowsHeightFactor[rowNo] : 1.f;}
-	void setRowHeightFactor(int rowNo, float value);
-	void resizeRowHeightFactor(int rowNo, float value); // same as above, adding offset
+	void resizeRow(int rowNo, int pixel);
+	void resizeColumn(Column* col, int pixel);
 
 	unsigned int getElementNumber() {return mWorkspaceNumber;}
 	TilingManager* getManager() {return mManager;}
@@ -72,12 +77,16 @@ public:
 	void setCurrent(bool state = true) {mIsCurrent = state;}
 	bool isCurrent() {return mIsCurrent;}
 
+	Monitor* getMonitor() {return mMonitor;}
+	void setMonitor(Monitor* m) {mMonitor = m; update();}
+
 	void cleanup();
 	void update();
 
 private:
 	unsigned int mWorkspaceNumber;
 	TilingManager* mManager;
+	Monitor* mMonitor;
 
 	Rect mRect;
 	int mRows;

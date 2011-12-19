@@ -310,7 +310,7 @@ void Column::update()
 {
 	float y = (float)mParentWorkspace->getRect().Y1;
 	float height;
-
+	
 	float sumRowHeightRatio = 0.f;
 	for (auto it = mContainers.begin(); it != mContainers.end(); it++)
 	{

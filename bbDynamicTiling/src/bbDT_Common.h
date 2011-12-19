@@ -20,29 +20,27 @@ along with this program. If not, see http://www.gnu.org/licenses/.
 #define BBDT_COMMON_H
 
 #include <assert.h>
-#include "BBApi.h"
-#include "bblib.h"
-#include "bbversion.h"
+#include "blackbox_header/BBApi.h"
+#include "blackbox_header/bblib.h"
+#include "blackbox_header/bbversion.h"
 #include <stdlib.h>
 
 #include <algorithm>
 #include <deque>
 #include <list>
 #include <string>
+#include <sstream>
 #include <unordered_map>
 #include <unordered_set>
 
-// #include <iostream>
-// using std::cout;
-// using std::endl;
-
-#define INCLUSION_FILE "inclusions.rc"
+#define INCLUSION_FILENAME "inclusions.rc"
 
 // class declaration
 class Client;
 class Column;
 class Container;
 class TilingManager;
+class Monitor;
 class Workspace;
 
 char* find_config_file(char *rcpath, const char *file);
@@ -83,15 +81,16 @@ struct Rect
 	Rect()
 	:	X1(0), Y1(0), X2(0), Y2(0) {}
 	
-	void operator=(LPRECT rect)
+	Rect& operator = (LPRECT rect)
 	{
 		X1 = rect->left;
 		Y1 = rect->top;
 		X2 = rect->right;
 		Y2 = rect->bottom;
+        return *this;
 	}
 
-	bool operator==(const Rect& rect)
+	bool operator == (const Rect& rect) const
 	{
 		if (X1 == rect.X1)
 			if (Y1 == rect.Y1)
@@ -101,8 +100,15 @@ struct Rect
 		return false;
 	}
 	
-	int getWidth() {return X2 - X1;}
-	int getHeight() {return Y2 - Y1;}
+	int getWidth() {return X2 - X1;} const
+	int getHeight() {return Y2 - Y1;} const
+
+	std::string print() const
+	{
+		std::stringstream ss;
+		ss << "x1=" << X1 << " y1=" << Y1 << " x2=" << X2 << " y2=" << Y2;
+		return ss.str();
+	}
 
 	int X1, Y1, X2, Y2;
 };
@@ -118,7 +124,7 @@ struct RCSetting
 	int clientBorderSize;
 	
 	float minSizeFactor;
-	float resizeFactor;
+	int resizePixel;
 };
 
 #endif

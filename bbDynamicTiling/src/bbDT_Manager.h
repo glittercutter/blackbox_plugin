@@ -63,7 +63,14 @@ public:
 	int getWorkspaceBorderSize() {return mRCSetting->workspaceBorderSize;}
 	int getWorkspaceFullscreenBorderSize() {return mRCSetting->workspaceFullscreenBorderSize;}
 	float getMinSizeFactor() {return mRCSetting->minSizeFactor;}
+
+	void addMonitor(HMONITOR hM);
+	void removeMonitor(HMONITOR hM);
+	void updateMonitorInfo();
+	Monitor* getWorkspaceMonitor(int n);
+	Monitor* getMonitor(int n);
 	
+
 	int getWorkspaceNumber(Workspace* workspace);
 	
 	void removeBorder(HWND hwnd);
@@ -79,8 +86,10 @@ private:
 	int getModuleName(HWND hwnd, char *buffer, int buffsize);
 
 	void addWorkspace(int workspace);
-	std::deque<Workspace*> mWorkspaces;	
+	std::deque<Workspace*> mWorkspaces;
 	Workspace* mCurrentWorkspace;
+
+	std::unordered_map<HMONITOR, Monitor*> mMonitors;
 
 	std::unordered_map<HWND, Client*> mClients;
 	std::unordered_set<std::string> mInclusionList;
